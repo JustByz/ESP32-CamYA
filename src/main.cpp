@@ -1,42 +1,41 @@
 #include <Arduino.h>
 #include <WiFi.h>
-#include <FS.h>           // 👈 обязательно
-#include <LittleFS.h>     // 👈 обязательно
 #include "esp_camera.h"
+#include <FS.h>
+#include <LittleFS.h>
+
 #include "Config.h"
 #include "app_httpd.h"
 
-// ВАЖНО: выбрать модель камеры ДО подключения camera_pins.h
-#define CAMERA_MODEL_AI_THINKER  // если у тебя именно AI Thinker ESP32-CAM
+// ВАЖНО: выбрать модель до camera_pins.h
+#define CAMERA_MODEL_AI_THINKER
 #include "camera_pins.h"
-
-#ifndef WIFI_SSID
-#define WIFI_SSID "YourSSID"
-#define WIFI_PASS "YourPASS"
-#endif
 
 void setup() {
   Serial.begin(115200);
   Serial.setDebugOutput(true);
   Serial.println();
+  Serial.println("ESP32-CAM start");
 
+  // ФС
   if (!LittleFS.begin(true)) {
     Serial.println("LittleFS mount failed");
   } else {
     Serial.println("LittleFS mounted OK");
   }
 
+  // Wi-Fi
   WiFi.begin(WIFI_SSID, WIFI_PASS);
-  Serial.print("Connecting to Wi-Fi");
+  Serial.print("Wi-Fi connecting");
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
   }
-  Serial.println("\nWi-Fi connected");
-  Serial.print("IP: ");
+  Serial.println();
+  Serial.print("Wi-Fi connected! IP: ");
   Serial.println(WiFi.localIP());
 
-  // Конфигурация камеры
+  // Камера
   camera_config_t config = {};
   config.ledc_channel = LEDC_CHANNEL_0;
   config.ledc_timer   = LEDC_TIMER_0;
@@ -52,8 +51,8 @@ void setup() {
   config.pin_pclk     = PCLK_GPIO_NUM;
   config.pin_vsync    = VSYNC_GPIO_NUM;
   config.pin_href     = HREF_GPIO_NUM;
-  config.pin_sccb_sda = SIOD_GPIO_NUM;   // новое имя поля в камере
-  config.pin_sccb_scl = SIOC_GPIO_NUM;   // новое имя поля в камере
+  config.pin_sccb_sda = SIOD_GPIO_NUM;
+  config.pin_sccb_scl = SIOC_GPIO_NUM;
   config.pin_pwdn     = PWDN_GPIO_NUM;
   config.pin_reset    = RESET_GPIO_NUM;
   config.xclk_freq_hz = 20000000;

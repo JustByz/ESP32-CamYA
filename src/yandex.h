@@ -1,9 +1,20 @@
 #pragma once
 #include <Arduino.h>
 
-bool   ydUploadFile(const String &localPath, const String &remotePath);
-String ydUploadFileWithRename(const String &localPath, const String &remotePath);
-bool   ydEnsureDirsREST(const String &dir);
+// ⚙️ Конфиг задаётся в Config.h
+#include "Config.h"
 
-// Вспомогательное URL-кодирование (для путей с пробелами/кириллицей)
-String ydUrlEncode(const String &s);
+// Создание папки
+bool ydCreateFolder(const String &path);
+
+// Проверка существования ресурса
+bool ydResourceExists(const String &path);
+
+// Получение ссылки для загрузки
+String ydGetUploadHref(const String &remotePath, bool overwrite = true);
+
+// Загрузка файла на Яндекс.Диск
+bool ydUploadFile(const String &localPath, const String &remotePath);
+
+// Удобная обёртка: сначала создать папку (если нет), потом загрузить файл
+bool ydEnsureUpload(const String &folder, const String &localFile, const String &remoteFile);
