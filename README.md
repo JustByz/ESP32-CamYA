@@ -43,17 +43,21 @@
 
 ## 📂 Структура исходников
 
+```text
 src/
-├── main.cpp         # Инициализация камеры, Wi-Fi, запуск веб- и стрим-сервера
-├── app_httpd.cpp    # Веб-сервер: обработка роутов (/capture, /save, /mkdir, /update и др.)
-├── yandex.cpp/.h    # Работа с REST API Яндекс.Диска (создание папок, загрузка файлов, логирование)
-├── camera_index.h   # HTML+JS веб-интерфейса (вшитая страница управления)
-├── camera_pins.h    # Конфигурация пинов модуля камеры (AI Thinker ESP32-CAM)
-├── Config.h         # Общие параметры (порты, настройки FS, константы)
+ ├── main.cpp        // Инициализация камеры, Wi-Fi, запуск веб- и стрим-сервера
+ ├── app_httpd.cpp   // Веб-сервер: обработка роутов (/capture, /save, /mkdir, /update и др.)
+ ├── yandex.cpp/.h   // Работа с REST API Яндекс.Диска (создание папок, загрузка файлов, логирование)
+ ├── camera_index.h  // HTML+JS веб-интерфейса (вшитая страница управления)
+ ├── camera_pins.h   // Конфигурация пинов модуля камеры (AI Thinker ESP32-CAM)
+ └── Config.h        // Общие параметры (порты, настройки FS, константы)
+
 include/
-└── secret.h         # 🔒 Wi-Fi креды и OAuth-токен Яндекс.Диска (не коммитится, есть в .gitignore)
+ └── secret.h        // 🔒 Wi-Fi креды и OAuth-токен Яндекс.Диска (не коммитится, есть в .gitignore)
+
 docs/
-└── screenshot.png   # Скриншот веб-интерфейса ESP32-CAM
+ └── screenshot.png  // Скриншот веб-интерфейса ESP32-CAM
+```
 
 ---
 
@@ -82,7 +86,7 @@ git clone https://github.com/JustByz/ESP32-CamYA.git
 cd ESP32-CamYA
 ```
 
-Создаём include/secret.h:
+Создаём `include/secret.h`:
 
 ```cpp
 #pragma once
@@ -149,11 +153,11 @@ pio device monitor
 
 ## ☁️ Как работает загрузка в Яндекс.Диск
 
-1. ESP делает снимок и сохраняет в LittleFS.  
-2. Вызывается `ydEnsureUpload()` → проверка/создание папки.  
-3. `ydGetUploadHref()` → запрос ссылки для загрузки.  
-4. `PUT file.jpg → href`.  
-5. При успехе → локальный файл удаляется.  
+1. ESP делает снимок и сохраняет в LittleFS  
+2. Вызывается `ydEnsureUpload()` → проверка/создание папки  
+3. `ydGetUploadHref()` → запрос ссылки для загрузки  
+4. `PUT file.jpg → href`  
+5. При успехе → локальный файл удаляется  
 
 ---
 
@@ -169,7 +173,7 @@ wipefs
 
 ---
 
-## 🔧 Внутренние функции (Yandex.cpp)
+## 🔧 Внутренние функции (yandex.cpp)
 
 - `bool ydResourceExists(path)` → проверка существования ресурса  
 - `bool ydCreateFolder(path)` → создать папку  
@@ -182,22 +186,19 @@ wipefs
 
 ## 🧪 Примеры последовательностей
 
-Сохранить снимок и отправить в базовую папку:
-
+Сохранить снимок и отправить в базовую папку:  
 ```bash
 curl http://<IP>/save
 curl http://<IP>/ydlog
 ```
 
-Создать папку и загрузить в неё:
-
+Создать папку и загрузить в неё:  
 ```bash
 curl -X POST http://<IP>/mkdir -d "/Esp32Cam/session1"
 curl http://<IP>/save
 ```
 
-Посмотреть список файлов в папке:
-
+Посмотреть список файлов в папке:  
 ```bash
 curl "http://<IP>/ydlist?name=/Esp32Cam/session1"
 ```
@@ -206,11 +207,11 @@ curl "http://<IP>/ydlist?name=/Esp32Cam/session1"
 
 ## 🩺 Типичные ошибки
 
-- `403 Forbidden` → токен без прав записи → нужен токен с `disk:read disk:write`  
-- `401 Unauthorized` → токен неверен/просрочен → получить новый  
-- `500 /capture` → камера не вернула кадр → проверить питание и `#define CAMERA_MODEL_AI_THINKER`  
-- `/ydlog → 404` → лога ещё нет → вызвать `/ytest` или `/save`  
-- Ребуты при `/ytest` или `/stream` → исправлено (увеличен стек задач)  
+- **403 Forbidden** → токен без прав записи → нужен токен с `disk:read disk:write`  
+- **401 Unauthorized** → токен неверен/просрочен → получить новый  
+- **500 /capture** → камера не вернула кадр → проверить питание и `#define CAMERA_MODEL_AI_THINKER`  
+- **/ydlog → 404** → лога ещё нет → вызвать `/ytest` или `/save`  
+- **Ребуты при /ytest или /stream** → исправлено (увеличен стек задач)  
 
 ---
 
@@ -223,7 +224,7 @@ curl "http://<IP>/ydlist?name=/Esp32Cam/session1"
 
 ## ⚙️ Где править поведение
 
-- Базовая папка на Диске → `YD_BASE_DIR` в `secret.h/Config.h`  
+- Базовая папка на Диске → `YD_BASE_DIR` в `secret.h`  
 - Лог → путь `/yd_log.json`  
 - OTA лог → `/ota_log.json`  
 - Порт стрима → `81` в `startCameraServer()`  
