@@ -44,16 +44,16 @@
 ## 📂 Структура исходников
 
 src/
-├── main.cpp # Инициализация камеры, WiFi, запуск серверов
-├── app_httpd.cpp # Веб-сервер: роуты, capture, stream, save, mkdir, OTA
-├── yandex.cpp/.h # Работа с REST API Яндекс.Диска
-├── camera_index.h # HTML+JS веб-интерфейса
-├── camera_pins.h # Конфиг пинов (AI Thinker ESP32-CAM)
-├── Config.h # Общие параметры
+├── main.cpp         # Инициализация камеры, Wi-Fi, запуск веб- и стрим-сервера
+├── app_httpd.cpp    # Веб-сервер: обработка роутов (/capture, /save, /mkdir, /update и др.)
+├── yandex.cpp/.h    # Работа с REST API Яндекс.Диска (создание папок, загрузка файлов, логирование)
+├── camera_index.h   # HTML+JS веб-интерфейса (вшитая страница управления)
+├── camera_pins.h    # Конфигурация пинов модуля камеры (AI Thinker ESP32-CAM)
+├── Config.h         # Общие параметры (порты, настройки FS, константы)
 include/
-└── secret.h # Wi-Fi и токен Яндекс.Диска (в .gitignore)
+└── secret.h         # 🔒 Wi-Fi креды и OAuth-токен Яндекс.Диска (не коммитится, есть в .gitignore)
 docs/
-└── screenshot.png # Скриншот веб-интерфейса
+└── screenshot.png   # Скриншот веб-интерфейса ESP32-CAM
 
 ---
 
